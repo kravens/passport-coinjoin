@@ -10,7 +10,9 @@ and caches the account keys, and every round produces a real taproot SLIP-0019
 ownership proof, policy-checked against the coordinator binding. Dark-first,
 matching Wasabi.
 
-**Runs on a retail Passport Prime** (KeyOS 1.4.0+) as a sideloaded third-party
+**Verified on a retail Passport Prime** (KeyOS 1.4, 2026-09-06): installed from the
+Airlock via Allowed Publishers + Install App, app-seed consent, session opened,
+taproot proof produced. Runs as a sideloaded third-party
 app. Built against Foundation SDK 1.0.0.
 
 ## Screens
