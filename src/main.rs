@@ -1,9 +1,12 @@
+// SPDX-FileCopyrightText: 2026 Foundation Devices, Inc. <hello@foundation.xyz>
+// SPDX-License-Identifier: MIT
+
 mod coinjoin;
 mod theme;
 
-use slint_keyos_platform::app_ui;
+use slint_keyos_platform::app_ui2;
 
-app_ui!("Coinjoin Signer");
+app_ui2!("Coinjoin Signer");
 
 fn app_main(_cx: AppContext, ui: AppWindow) {
     log_server::init_wait(env!("CARGO_CRATE_NAME")).unwrap();

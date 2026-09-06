@@ -1,4 +1,6 @@
 target/
+.foundation-sdk/
 ui/ui
+manifest.toml
 ui/gen/
-resources/fonts
+dist/

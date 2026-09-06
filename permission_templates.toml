@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2026 Foundation Devices, Inc. <hello@foundation.xyz>
+# SPDX-License-Identifier: MIT
+
 [fs-generic]
 "os/fs" = [
     "OpenDirMessage",
@@ -13,7 +16,6 @@
     "GetMetadata",
     "NextEntry",
     "Flush",
-    "FlushFs",
     "Remove",
     "Rename",
     "AtomicCopy",
@@ -22,22 +24,13 @@
     "AsyncCopyBlock",
     "SubscribeFilesystemEvent",
 ]
-[i2c]
-"os/i2c" = [
-    "ClaimPeripheral",
-    "SingleTransfer",
-]
-[gpio]
-"os/gpio" = [
-    "ClaimPin",
-    "EnableIrq",
-    "SetPin",
-    "GetPin",
-]
 [gui-app]
 "os/fs" = [
     "OpenDirMessage",
+    "OpenFileMessage",
+    "CloseFile",
     "CloseDir",
+    "ReadFile",
     "NextEntry",
     "MapFileMessage",
     "GetMetadata",

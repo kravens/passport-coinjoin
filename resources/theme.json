@@ -1,7 +1,7 @@
 {
   "id": "app_theme",
-  "name": "Coinjoin Signer Theme",
-  "parent": "verdant_theme",
+  "name": "Coinjoin Signer",
+  "parent": "base_theme",
   "tokens": {
     "colors": {
       "dark": {

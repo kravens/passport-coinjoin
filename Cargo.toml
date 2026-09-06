@@ -1,29 +1,38 @@
+# SPDX-FileCopyrightText: 2026 Foundation Devices, Inc. <hello@foundation.xyz>
+# SPDX-License-Identifier: MIT
+
 [package]
 name = "coinjoin-signer"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
-license = "MIT"
 
 [workspace]
+exclude = [".foundation-sdk"]
+
+[workspace.dependencies]
+# Same revision KeyOS itself builds against, so the engine crate stays drop-in
+# for the firmware proposal branch.
+ngwallet = { git = "https://github.com/Foundation-Devices/ngwallet", tag = "2.15.0", features = [
+    "rkyv",
+    "sha2",
+] }
 
 [dependencies]
 log = "0.4"
-# Real coinjoin remote-signing logic (policy, SLIP-19 proofs, sessions) from the
-# KeyOS feature branch — the mockup drives it with a test seed + mock backend.
-wallet-rpc-core = { path = "/home/Kevin/KeyOS/os/wallet-rpc-core" }
-log-server = { package = "xous-api-log", path = "/home/Kevin/.foundation/sdk/current/lib/keyos/xous/api/log" }
+# Coinjoin remote-signing engine: policy, SLIP-0019 proofs, sessions, signing.
+wallet-rpc-core = { path = "crates/wallet-rpc-core" }
+# App-scoped seed (GetAppSeed) and secure-element randomness (os/security).
+security = { path = ".foundation-sdk/current/lib/keyos/api/security" }
+log-server = { package = "xous-api-log", path = ".foundation-sdk/current/lib/keyos/xous/api/log" }
 serde = { version = "1.0", features = ["derive"] }
-server = { path = "/home/Kevin/.foundation/sdk/current/lib/keyos/server" }
-slint-keyos-platform = { path = "/home/Kevin/.foundation/sdk/current/lib/keyos/slint-keyos-platform/runtime" }
-foundation-themes = { path = "/home/Kevin/.foundation/sdk/current/lib/keyos/sdk/crates/foundation-themes" }
+server = { path = ".foundation-sdk/current/lib/keyos/server" }
+slint-keyos-platform = { path = ".foundation-sdk/current/lib/keyos/slint-keyos-platform/runtime" }
+foundation-themes = { path = ".foundation-sdk/current/lib/keyos/sdk/crates/foundation-themes" }
 
 [build-dependencies]
-foundation-themes = { path = "/home/Kevin/.foundation/sdk/current/lib/keyos/sdk/crates/foundation-themes" }
-slint-keyos-platform-build = { path = "/home/Kevin/.foundation/sdk/current/lib/keyos/slint-keyos-platform/build" }
+slint-keyos-platform-build = { path = ".foundation-sdk/current/lib/keyos/slint-keyos-platform/build" }
 
-# Same patch the KeyOS workspace applies: getrandom with a Xous backend, needed
-# by ngwallet's dependency tree on armv7a-unknown-xous-elf. Vendored copy with
-# its xous dep re-pointed at the SDK's xous-rs — the KeyOS repo's copy would
-# drag in a second `keyos` package and collide with the SDK's.
+# Randomness is pre-wired: add `getrandom = "0.2"` (or `rand = "0.8"`) and calls
+# route to the TRNG on device. Stay on the getrandom 0.2 line; 0.3+ is uncovered.
 [patch.crates-io]
-getrandom = { path = "vendor/getrandom" }
+getrandom = { path = ".foundation-sdk/current/lib/keyos/imports/getrandom" }

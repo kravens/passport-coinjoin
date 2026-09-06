@@ -1,14 +1,21 @@
-import { Theme, ButtonStyleProps, ButtonSizeProps, ButtonVariant, ButtonState, ButtonSize } from "@ui/theme.slint";
+// SPDX-FileCopyrightText: 2026 Foundation Devices, Inc. <hello@foundation.xyz>
+// SPDX-License-Identifier: MIT
+
+import {
+    Theme,
+    UISize,
+    Images,
+} from "@ui/theme.slint";
 import { Router } from "gen/router.slint";
 import { Cj } from "cj.slint";
 
-export { Theme, ButtonStyleProps, ButtonSizeProps, ButtonVariant, ButtonState, ButtonSize, Cj }
+export { Theme, Images, Cj }
 export * from "gen/exports.slint";
 
 export component AppWindow inherits Window {
     title: "Coinjoin Signer";
-    preferred-width: 480px;
-    preferred-height: 800px;
+    preferred-width: UISize.screen-width;
+    preferred-height: UISize.screen-height;
     background: Theme.palette-background;
 
     Router { }
