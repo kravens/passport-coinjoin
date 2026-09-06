@@ -58,6 +58,12 @@ export component MainPagePage inherits Rectangle {
         }
         CjButton {
             width: 100%;
+            secondary: true;
+            text: "Export wallet for Wasabi";
+            clicked => { if (Cj.prepare-export()) { Navigate.export({ }); } }
+        }
+        CjButton {
+            width: 100%;
             text: "Simulate incoming request";
             clicked => { Cj.request-demo(); Navigate.authorize({ }); }
         }

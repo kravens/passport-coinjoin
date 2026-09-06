@@ -13,8 +13,9 @@
 //! policy bytes come from.
 
 use core::cell::RefCell;
+use std::io::Write;
 
-use slint_keyos_platform::slint::ComponentHandle;
+use slint_keyos_platform::slint::{Color, ComponentHandle};
 use wallet_rpc_core::coinjoin::{Policy, TOKEN_LEN};
 use wallet_rpc_core::protocol::{Backend, CoreError, Engine};
 
@@ -25,6 +26,7 @@ use wallet_rpc_core::ngwallet::bdk_wallet::bitcoin::{
 use wallet_rpc_core::zeroize::Zeroizing;
 
 security::use_api!();
+fs::use_api!();
 
 /// Device-backed implementation of the engine's backend.
 struct PrimeBackend {
@@ -184,6 +186,29 @@ fn clear_session(cj: &crate::Cj) {
     cj.set_last_result("".into());
 }
 
+const EXPORT_DIR: &str = "wallets";
+const EXPORT_FILENAME: &str = "coinjoin-signer-wasabi.json";
+
+/// Write the wallet file to the Airlock. Returns the path on the volume.
+fn save_to_airlock(json: &str) -> Result<String, String> {
+    let fs = FileSystem::default();
+    let location = fs::Location::Airlock;
+    let dir = fs
+        .create_dir(EXPORT_DIR, location)
+        .map_err(|e| format!("Airlock not writable ({e:?}). Turn Airlock off / unplug USB, then retry."))?;
+    let name = dir
+        .pick_next_filename(EXPORT_FILENAME, None)
+        .map_err(|e| format!("Could not pick a file name ({e:?})."))?;
+    let path = format!("{EXPORT_DIR}/{name}");
+    let mut file = fs
+        .open_file(&path, location, fs::OpenFlags { read: false, write: true, create: true })
+        .map_err(|e| format!("Could not create {path} ({e:?})."))?;
+    file.write_all(json.as_bytes())
+        .and_then(|_| file.flush())
+        .map_err(|e| format!("Write failed ({e})."))?;
+    Ok(path)
+}
+
 pub fn init(ui: &crate::AppWindow) {
     let backend = PrimeBackend {
         security: Security::default(),
@@ -298,5 +323,56 @@ pub fn init(ui: &crate::AppWindow) {
         app.next_index = 0;
         app.pending = None;
         clear_session(&cj);
+    });
+
+    let ui_weak = ui.as_weak();
+    cj.on_prepare_export(move || {
+        let ui = ui_weak.unwrap();
+        let cj = ui.global::<crate::Cj>();
+        let mut app = app.borrow_mut();
+        cj.set_export_path("".into());
+        // Two derivations, one consent (KeyOS remembers the app-seed grant).
+        let (fingerprint, xpub84) = match app.engine.xpub(Network::Bitcoin, &[84 | H, H, H]) {
+            Ok(v) => v,
+            Err(e) => {
+                cj.set_status(error_text(e).into());
+                return false;
+            }
+        };
+        let xpub86 = match app.engine.xpub(Network::Bitcoin, &[86 | H, H, H]) {
+            Ok((_, x)) => x,
+            Err(e) => {
+                cj.set_status(error_text(e).into());
+                return false;
+            }
+        };
+        let json = wallet_rpc_core::wasabi::wallet_json(&fingerprint.to_string(), &xpub84, &xpub86);
+        cj.set_wallet_qr(slint_keyos_platform::qrcode::render(
+            json.as_bytes(),
+            Color::from_rgb_u8(0, 0, 0),
+            Color::from_rgb_u8(255, 255, 255),
+        ));
+        cj.set_wallet_json(json.into());
+        cj.set_fingerprint(fingerprint.to_string().into());
+        cj.set_status("".into());
+        true
+    });
+
+    let ui_weak = ui.as_weak();
+    cj.on_save_export(move || {
+        let ui = ui_weak.unwrap();
+        let cj = ui.global::<crate::Cj>();
+        let json = cj.get_wallet_json();
+        match save_to_airlock(&json) {
+            Ok(path) => {
+                log::info!("wasabi wallet file saved to airlock: {path}");
+                cj.set_export_path(path.into());
+                cj.set_status("".into());
+            }
+            Err(msg) => {
+                log::warn!("wasabi export failed: {msg}");
+                cj.set_status(msg.into());
+            }
+        }
     });
 }

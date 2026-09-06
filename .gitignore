@@ -3,4 +3,3 @@ target/
 ui/ui
 manifest.toml
 ui/gen/
-dist/

@@ -13,6 +13,7 @@ pub mod coinjoin;
 pub mod frames;
 pub mod protocol;
 pub mod slip19;
+pub mod wasabi;
 
 // Re-exports so consumers don't need to pin these dependencies themselves:
 // bitcoin types surface in our public API (Network, bip39, Psbt, ...) and

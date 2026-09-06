@@ -3,7 +3,7 @@
 
 [package]
 name = "coinjoin-signer"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2021"
 
 [workspace]
@@ -23,6 +23,8 @@ log = "0.4"
 wallet-rpc-core = { path = "crates/wallet-rpc-core" }
 # App-scoped seed (GetAppSeed) and secure-element randomness (os/security).
 security = { path = ".foundation-sdk/current/lib/keyos/api/security" }
+# Airlock file export of the Wasabi wallet file (os/fs).
+fs = { path = ".foundation-sdk/current/lib/keyos/api/fs" }
 log-server = { package = "xous-api-log", path = ".foundation-sdk/current/lib/keyos/xous/api/log" }
 serde = { version = "1.0", features = ["derive"] }
 server = { path = ".foundation-sdk/current/lib/keyos/server" }

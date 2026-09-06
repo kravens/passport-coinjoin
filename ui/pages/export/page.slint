@@ -1,0 +1,78 @@
+import { Theme, UISize, ControlSize } from "@ui/theme.slint";
+import { CjButton } from "../../cjbutton.slint";
+import { Card } from "@ui/card.slint";
+import { Navigate } from "../../gen/navigate.slint";
+import { Cj } from "../../cj.slint";
+
+// The app-seed wallet's account xpubs as a Wasabi wallet file: scan it, or save
+// it to the Airlock and import it in Wasabi (Add Wallet > Import Wallet).
+export component ExportPage inherits Rectangle {
+    background: Theme.palette-background;
+    VerticalLayout {
+        width: parent.width;
+        height: parent.height;
+        padding-left: 24px;
+        padding-right: 24px;
+        padding-top: 24px + UISize.control-center-status-bar-height;
+        padding-bottom: 24px;
+        spacing: 12px;
+        Text {
+            text: "Wasabi wallet file";
+            color: Theme.palette-foreground;
+            font-family: "Montserrat";
+            font-size: 22px;
+            font-weight: 700;
+            horizontal-alignment: center;
+        }
+        Text {
+            text: "Wallet " + Cj.fingerprint + " · BIP-84 + BIP-86 xpubs, watch-only. Import in Wasabi: Add Wallet > Import Wallet.";
+            color: Theme.palette-muted;
+            font-family: "Montserrat";
+            font-size: 12px;
+            horizontal-alignment: center;
+            wrap: word-wrap;
+        }
+        Rectangle {
+            width: 100%;
+            height: self.width;
+            border-radius: 16px;
+            background: white;
+            Image {
+                width: parent.width - 16px;
+                height: parent.height - 16px;
+                source: Cj.wallet-qr;
+                image-rendering: pixelated;
+            }
+        }
+        Text {
+            visible: Cj.status != "";
+            text: Cj.status;
+            color: Theme.palette-secondary;
+            font-family: "Montserrat";
+            font-size: 12px;
+            horizontal-alignment: center;
+            wrap: word-wrap;
+        }
+        Text {
+            visible: Cj.export-path != "";
+            text: "Saved to Airlock: " + Cj.export-path;
+            color: Theme.palette-primary;
+            font-family: "Montserrat";
+            font-size: 12px;
+            horizontal-alignment: center;
+            wrap: word-wrap;
+        }
+        Rectangle { vertical-stretch: 1; }
+        CjButton {
+            width: 100%;
+            text: "Save to Airlock";
+            clicked => { Cj.save-export(); }
+        }
+        CjButton {
+            width: 100%;
+            secondary: true;
+            text: "Back";
+            clicked => { Navigate.backward(); }
+        }
+    }
+}

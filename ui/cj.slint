@@ -37,4 +37,15 @@ export global Cj {
     callback authorize() -> bool;
     callback simulate-round();
     callback revoke();
+
+    // --- Wasabi wallet export (xpubs of the app-seed wallet) ---
+    in-out property <string> wallet-json: "";
+    in-out property <image> wallet-qr;
+    // Path the file landed at on the Airlock, or "".
+    in-out property <string> export-path: "";
+    // Derives both account xpubs (one app-seed read), fills wallet-json / wallet-qr.
+    // False means it failed; `status` says why.
+    callback prepare-export() -> bool;
+    // Writes wallet-json to the Airlock as a Wasabi wallet file.
+    callback save-export();
 }
