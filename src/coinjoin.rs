@@ -193,19 +193,16 @@ const EXPORT_FILENAME: &str = "coinjoin-signer-wasabi.json";
 fn save_to_airlock(json: &str) -> Result<String, String> {
     let fs = FileSystem::default();
     let location = fs::Location::Airlock;
-    let dir = fs
-        .create_dir(EXPORT_DIR, location)
+    fs.create_dir(EXPORT_DIR, location)
         .map_err(|e| format!("Airlock not writable ({e:?}). Turn Airlock off / unplug USB, then retry."))?;
-    let name = dir
-        .pick_next_filename(EXPORT_FILENAME, None)
-        .map_err(|e| format!("Could not pick a file name ({e:?})."))?;
-    let path = format!("{EXPORT_DIR}/{name}");
+    // One fixed file, overwritten in place: a repeated tap rewrites the same
+    // bytes instead of littering the Airlock with numbered copies.
+    let path = format!("{EXPORT_DIR}/{EXPORT_FILENAME}");
     let mut file = fs
         .open_file(&path, location, fs::OpenFlags { read: false, write: true, create: true })
         .map_err(|e| format!("Could not create {path} ({e:?})."))?;
-    file.write_all(json.as_bytes())
-        .and_then(|_| file.flush())
-        .map_err(|e| format!("Write failed ({e})."))?;
+    file.overwrite(json.as_bytes()).map_err(|e| format!("Write failed ({e:?})."))?;
+    file.flush().map_err(|e| format!("Flush failed ({e})."))?;
     Ok(path)
 }
 

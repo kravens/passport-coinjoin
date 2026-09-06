@@ -26,12 +26,6 @@ comes once Foundation adds the two coinjoin messages
    engine (SLIP-0019 proof for the next index, coordinator-bound commitment) and
    shows the result; revoke closes the session.
 4. **Complete** — session summary.
-5. **Export** (Home > "Export wallet for Wasabi") — the wallet's BIP-84 and
-   BIP-86 account xpubs as a Wasabi wallet file: shown as a QR, and "Save to
-   Airlock" writes `wallets/coinjoin-signer-wasabi.json` to the Airlock volume
-   (Airlock must be off / USB unplugged while saving). In Wasabi: Add Wallet >
-   Import Wallet > pick the file. Watch-only, PSBT workflow, auto-coinjoin on.
-   Verified against Wasabi 2.7.2's `KeyManager.FromFile`.
 
 Screenshots captured with the KeyOS simulator's own screenshot button while the
 signed app runs on it — official Prime bezel, KeyOS status bar, live engine

@@ -24,4 +24,4 @@ template = ["gui-app"]
 # GetRandom: secure-element entropy for the session token.
 "os/security" = ["GetAppSeed", "GetRandom"]
 # Write the Wasabi wallet file to the Airlock (user grants Airlock access once).
-"os/fs" = ["CreateDirMessage", "WriteFile", "Flush", "GetAirlockWriteAccess"]
+"os/fs" = ["CreateDirMessage", "WriteFile", "SeekFile", "TruncateFile", "Flush", "GetAirlockWriteAccess"]
