@@ -919,7 +919,7 @@ dependencies = [
 
 [[package]]
 name = "coinjoin-signer"
-version = "0.3.1"
+version = "0.4.0"
 dependencies = [
  "foundation-themes",
  "fs",
@@ -929,7 +929,9 @@ dependencies = [
  "server",
  "slint-keyos-platform",
  "slint-keyos-platform-build",
+ "usbdev",
  "wallet-rpc-core",
+ "xous",
  "xous-api-log",
 ]
 
@@ -6558,6 +6560,16 @@ dependencies = [
  "idna",
  "percent-encoding",
  "serde",
+]
+
+[[package]]
+name = "usbdev"
+version = "0.1.0"
+dependencies = [
+ "log",
+ "rkyv",
+ "server",
+ "xous",
 ]
 
 [[package]]

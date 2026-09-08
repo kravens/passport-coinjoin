@@ -356,7 +356,8 @@ impl<B: Backend> Engine<B> {
     }
 }
 
-fn response(command: u8, status: u8, payload: &[u8]) -> Vec<u8> {
+/// A response frame: `[version][command][status][payload_len u32][payload]`.
+pub fn response(command: u8, status: u8, payload: &[u8]) -> Vec<u8> {
     let mut out = Vec::with_capacity(REQUEST_HEADER_LEN + 1 + payload.len());
     out.push(PROTOCOL_VERSION);
     out.push(command);

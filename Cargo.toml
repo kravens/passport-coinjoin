@@ -3,7 +3,7 @@
 
 [package]
 name = "coinjoin-signer"
-version = "0.3.1"
+version = "0.4.0"
 edition = "2021"
 
 [workspace]
@@ -17,12 +17,20 @@ ngwallet = { git = "https://github.com/Foundation-Devices/ngwallet", tag = "2.15
     "sha2",
 ] }
 
+[features]
+# The USB HID transport. Needs the os/usbdev grants of app-config.usb.toml, which the SDK
+# refuses to build and KeyOS reserves for Foundation-signed apps (docs/keyos-usbdev-request.md).
+usb = ["dep:usbdev"]
+
 [dependencies]
 log = "0.4"
 # Coinjoin remote-signing engine: policy, SLIP-0019 proofs, sessions, signing.
 wallet-rpc-core = { path = "crates/wallet-rpc-core" }
 # App-scoped seed (GetAppSeed) and secure-element randomness (os/security).
 security = { path = ".foundation-sdk/current/lib/keyos/api/security" }
+# The os/usbdev client the SDK does not ship (vendor/usbdev); only the usb flavour links it.
+usbdev = { path = "vendor/usbdev", optional = true }
+xous = { path = ".foundation-sdk/current/lib/keyos/xous/xous-rs" }
 # Airlock file export of the Wasabi wallet file (os/fs).
 fs = { path = ".foundation-sdk/current/lib/keyos/api/fs" }
 log-server = { package = "xous-api-log", path = ".foundation-sdk/current/lib/keyos/xous/api/log" }

@@ -3,6 +3,7 @@
 
 mod coinjoin;
 mod theme;
+mod transport;
 
 use slint_keyos_platform::app_ui2;
 

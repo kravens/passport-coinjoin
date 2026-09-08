@@ -25,5 +25,6 @@ template = ["gui-app"]
 "os/security" = ["GetAppSeed", "GetRandom"]
 # Write the Wasabi wallet file to the Airlock (user grants Airlock access once).
 "os/fs" = ["CreateDirMessage", "WriteFile", "SeekFile", "TruncateFile", "Flush", "GetAirlockWriteAccess"]
-# No os/usbdev here: the USB transport's grants live in app-config.usb.toml, and the SDK refuses
-# to build an app that declares them (docs/keyos-usbdev-request.md).
+# The USB HID transport (scripts/build-usb.sh). The SDK's build refuses these grants outright, and
+# KeyOS reserves the messages for Foundation-signed apps (docs/keyos-usbdev-request.md).
+"os/usbdev" = ["IsCableConnected", "NumInterfaces", "RegisterSetupResponder", "RegisterInterface", "WaitForConnection", "ReadEndpoint", "WriteEndpoint"]

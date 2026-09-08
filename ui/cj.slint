@@ -25,6 +25,10 @@ export global Cj {
     in-out property <string> last-result: "";
     // Error / explanation line, e.g. a denied seed permission.
     in-out property <string> status: "";
+    // What the USB transport found at start (see src/transport.rs), for the home screen.
+    in-out property <string> transport: "";
+    // True when rounds arrive over USB; the demo request is then out of place.
+    in-out property <bool> serving: false;
 
     // Implemented in src/coinjoin.rs against wallet_rpc_core::protocol::Engine.
     // Loads a request into the engine's pending slot. Until Foundation ships an
@@ -35,6 +39,8 @@ export global Cj {
     // once (trusted-display prompt), derives account keys, opens the session.
     // False means it failed; `status` says why, and the UI stays put.
     callback authorize() -> bool;
+    // Refuses the pending request; a host asking is told so.
+    callback deny();
     callback simulate-round();
     callback revoke();
 

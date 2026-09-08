@@ -39,7 +39,7 @@ export component MainPagePage inherits Rectangle {
             footer: "Your keys never leave the device.";
         }
         Text {
-            text: "No host transport yet — KeyOS does not give apps a USB or QuantumLink channel. The request below is local; everything after it is the real engine.";
+            text: Cj.transport;
             color: Theme.palette-muted;
             font-family: "Montserrat";
             font-size: 12px;
@@ -63,6 +63,7 @@ export component MainPagePage inherits Rectangle {
             clicked => { if (Cj.prepare-export()) { Navigate.export({ }); } }
         }
         CjButton {
+            visible: !Cj.serving;
             width: 100%;
             text: "Simulate incoming request";
             clicked => { Cj.request-demo(); Navigate.authorize({ }); }

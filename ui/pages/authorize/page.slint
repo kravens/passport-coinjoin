@@ -62,7 +62,7 @@ export component AuthorizePage inherits Rectangle {
             width: 100%;
             secondary: true;
             text: "Deny";
-            clicked => { Navigate.backward(); }
+            clicked => { Cj.deny(); Navigate.backward(); }
         }
         SlideToConfirm {
             width: 100%;
