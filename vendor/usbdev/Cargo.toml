@@ -1,0 +1,23 @@
+# SPDX-FileCopyrightText: 2026 Kevin Ravensberg <kevinravensberg@proton.me>
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+# The device role of KeyOS's `os/usbdev` server, as much of it as a wallet-rpc
+# interface needs. The SDK ships no `api/usb` crate (MIGRATIONS.md section 14),
+# and KeyOS's own pulls in the SAMA5D2 and EHCI hardware crates for two enums and
+# an error type; those are repeated here byte-compatibly instead.
+
+[package]
+name = "usbdev"
+version = "0.1.0"
+edition = "2021"
+license = "GPL-3.0-or-later"
+publish = false
+
+[dependencies]
+log = "0.4"
+rkyv = { version = "0.8.18", default-features = false, features = ["std", "bytecheck"] }
+server = { path = "../../.foundation-sdk/current/lib/keyos/server" }
+xous = { path = "../../.foundation-sdk/current/lib/keyos/xous/xous-rs" }
+
+[lints.rust]
+unexpected_cfgs = { level = "warn", check-cfg = ['cfg(keyos)'] }
